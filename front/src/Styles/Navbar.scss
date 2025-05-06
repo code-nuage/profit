@@ -1,0 +1,21 @@
+#navbar {
+    min-width: 100vw;
+    display: flex;
+    justify-content: center;
+    .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: fixed;
+        margin-top: 16px;
+        padding: 8px 12px 8px 16px;
+        background-color: #FFFFFF44;
+        .left {
+            display: flex;
+            align-items: center;
+            * {
+                margin: 0 4px;
+            }
+        }
+    }
+}

@@ -1,0 +1,173 @@
+//        ⠀⠀⠀⣀⡀⠀⢀⠀⠀⠀
+//        ⠀⣀⠚⠀⠁⠈⠀⠹⣄⠀
+//        ⠸⣀⡀⠀⠀⠀⠀⢀⡸⠃
+//        ⠀⠀⠳⠴⠒⠶⠞⠁⠀⠀
+// 
+// --+ PROFIT DESIGN SYSTEM +--
+//         @code-nuage
+
+// --+ FONTS +--
+@import url('https://fonts.googleapis.com/css2?family=Rozha+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
+// --+ VARIABLES +--
+$text-sizes: (
+    12: 12px,
+    14: 14px,
+    16: 16px,
+    24: 24px,
+    32: 32px,
+    48: 48px,
+    64: 64px,
+    96: 96px
+);
+
+$text-weights: (
+    'thin': 100,
+    'light': 300,
+    'normal': 400,
+    'bold': 700,
+    'black': 900,
+);
+
+$fonts: (
+  outfit: (
+    name: 'Outfit',
+    fallback: sans-serif
+  ),
+  rozha-one: (
+    name: 'Rozha One',
+    fallback: serif
+  )
+);
+
+$border-sizes: (
+    1: 1px,
+    2: 2px,
+    4: 4px
+);
+
+$border-radius: (
+    4: 4px,
+    8: 8px,
+    16: 16px
+);
+
+$colors: (
+    'primary': #4D00FF,
+    'secondary': #CEC5FF,
+    'tertiary': #E6D4E3,
+    'positive': #0EFB89,
+    'negative': #BF1A2F,
+    'accent': #F85FD0,
+    'light': #FFFFFF,
+    'dark': #2A1E28
+);
+
+// --+ RESET +--
+* {
+    font-family: 'Outfit', sans-serif;
+    color: var(--color-light);
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    cursor: pointer;
+}
+
+// --+ CLASSES +--
+@each $key, $value in $text-sizes {                                            // TEXT SIZE
+    .pds-text-size-#{$key} {
+        font-size: $value;
+    }
+}
+
+@each $key, $value in $text-weights {                                          // TEXT WEIGHT
+    .pds-text-weight-#{$key} {
+        font-weight: $value;
+    }
+}
+
+@each $name, $color in $colors {                                               // TEXT COLOR
+    .pds-text-#{$name} {
+        color: $color;
+    }
+}
+
+// @each $key, $font-map in $fonts {                                            // FONT
+//     $font-name: $font-map[name];                                                Can't get this working, will use simple CSS classes 
+//     $fallback: $font-map[fallback];
+  
+//     .pds-font-#{$key} {
+//         font-family: #{$font-name}, #{$fallback};
+//     }
+// }
+
+.pds-font-outfit { font-family: 'Outfit', sans-serif; }
+.pds-font-rozha-one { font-family: 'Rozha One', serif; }
+
+@each $key, $value in $border-sizes {                                          // BORDER SIZES
+    .pds-border-#{$key} {
+        border: $value solid;
+    }
+}
+
+@each $key, $value in $border-radius {                                         // BORDER RADIUS
+    .pds-border-radius-#{$key} {
+        border-radius: $value;
+    }
+}
+
+@each $key, $value in $colors {                                                // BORDER COLOR
+    .pds-border-color-#{$key} {
+        border-color: $value;
+    }
+}
+
+@each $name, $color in $colors {                                               // BACKGROUND COLOR
+    .pds-background-#{$name} {
+        background-color: $color;
+    }
+}
+
+// --+ CONTAINER +--
+.container {
+    margin: 0 auto;
+    width: 960px;
+}
+
+@media screen and (max-width: 972px) {
+    .container {
+        max-width: calc(100vw - 16px);
+    }
+}
+
+// --+ BUTTON +--
+.pds-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    border: none;
+    padding: 4px 8px;
+}
+
+.pds-button.pds-icon {
+    padding: 8px 8px;
+}
+
+.pds-button:hover {
+    cursor: pointer;
+}
