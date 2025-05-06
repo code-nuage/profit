@@ -1,3 +1,6 @@
 front/package.json
 front/package-lock.json
 front/node_modules
+
+back/deps
+back/config.lua
