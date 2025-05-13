@@ -1,17 +1,14 @@
 local http = require("http")
-
-local config = require("./config")
+local json = require("json")  -- Luvit a un module JSON intégré
 
 local root = require("./Utils/root")
 
-local controller_helloworld = require("./Controllers/helloworld")
+local config = require("./config")
+local user_routes = require("./Routes/user")
 
 local router = root.new_router()
 :set_not_found(require("./Controllers/notfound"))
-:add_route("/helloworld/:id", function(req, res)
-    controller_helloworld(req, res, req.params.id)
-end)
 
-http.createServer(function (req, res)
-    router:handle_request(req, res)
-end):listen(config.server.port, config.server.ip)
+user_routes(router)
+
+router:start(config.server.ip, config.server.port)

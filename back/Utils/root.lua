@@ -2,9 +2,8 @@
 -- Root, a simple OOP turned Luvit router
 --            @code-nuage
 
+local http = require("http")
 local url = require("url")
-
-local moreutils = require("./more-utils")
 
 local root = {}
 root.__index = root
@@ -52,7 +51,10 @@ function root:handle_request(req, res)
             for i, key in ipairs(route.keys) do
                 req.params[key] = matches[i]
             end
-            return route.controller(req, res)
+            print("Request: " .. "URI: " .. req.url .. " Method: " .. req.method)
+            return coroutine.wrap(function()
+                route.controller(req, res)
+            end)()
         end
     end
 
@@ -65,7 +67,27 @@ function root:handle_request(req, res)
 end
 
 function root:route_not_found(req, res)
-    self.not_found_controller(req, res)
+    return coroutine.wrap(function()
+        self.not_found_controller(req, res)
+    end)()
+end
+
+function root:start(ip, port)
+    http.createServer(function (req, res)
+        local chunks = {}
+
+        req:on("data", function(chunk)
+            table.insert(chunks, chunk)
+        end)
+
+        req:on("end", function()
+            local body = table.concat(chunks)
+
+            req.body = body
+
+            self:handle_request(req, res)
+        end)
+    end):listen(port, ip)
 end
 
 return root
