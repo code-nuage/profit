@@ -1,0 +1,13 @@
+#login {
+    min-height: 100vh;
+    .container {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+}

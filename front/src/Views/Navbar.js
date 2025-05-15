@@ -20,6 +20,9 @@ export default class ViewNavbar {
         document.querySelector('.redirect-about').addEventListener('click', (e) => {
             window.location.replace(window.location.origin + "/about");
         });
+        document.querySelector('.redirect-login').addEventListener('click', (e) => {
+            window.location.replace(window.location.origin + "/login");
+        });
     }
 
     render() {

@@ -46,11 +46,11 @@ function root:handle_request(req, res)
     local parsed = url.parse(req.url)
     local path = querystring.urldecode(parsed.pathname)                        -- Query string to handle special chars in URL
 
-    self:reassign_headers(req)
-
     print("Request: " .. "URI: " .. req.url ..
     " Method: " .. req.method ..
     "\nAgent@host: " .. req.headers["user-agent"] .. "@" .. req.headers["host"])
+
+    self:reassign_headers(req)
 
     for _, route in ipairs(self.routes) do
         local matches = {path:match(route.pattern)}
@@ -105,6 +105,7 @@ function root:start(ip, port)
             self:handle_request(req, res)
         end)
     end):listen(port, ip)
+    print("Server started @ " .. ip .. ":" .. port)
 end
 
 return root

@@ -1,7 +1,7 @@
 local controller_user = require("../Controllers/user")
 
 return function(router)
-    router:add_route("/user", "POST", function(req, res)
+    router:add_route("/user", "POST", function(req, res)                       -- I just love chained method don't mind
         local code, body, mime = controller_user.create(req.body)
 
         res:writeHead(code)
