@@ -16,7 +16,7 @@ function root.new_router()
     return i
 end
 
-function root:add_route(route, controller)
+function root:add_route(route, method, controller)
     local keys = {}
 
     local pattern = route:gsub("(:%w+)", function(key)
@@ -28,6 +28,7 @@ function root:add_route(route, controller)
 
     table.insert(self.routes, {
         pattern = pattern,
+        method = method,
         keys = keys,
         controller = controller
     })
@@ -44,17 +45,24 @@ function root:handle_request(req, res)
     local parsed = url.parse(req.url)
     local path = parsed.pathname
 
+    self:reassign_headers(req)
+
+    print("Request: " .. "URI: " .. req.url ..
+    " Method: " .. req.method ..
+    "\nAgent@host: " .. req.headers["user-agent"] .. "@" .. req.headers["host"])
+
     for _, route in ipairs(self.routes) do
         local matches = {path:match(route.pattern)}
         if #matches > 0 then
-            req.params = {}
-            for i, key in ipairs(route.keys) do
-                req.params[key] = matches[i]
+            if route.method == req.method then
+                req.params = {}
+                for i, key in ipairs(route.keys) do
+                    req.params[key] = matches[i]
+                end
+                return coroutine.wrap(function()
+                    route.controller(req, res)
+                end)()
             end
-            print("Request: " .. "URI: " .. req.url .. " Method: " .. req.method)
-            return coroutine.wrap(function()
-                route.controller(req, res)
-            end)()
         end
     end
 
@@ -70,6 +78,14 @@ function root:route_not_found(req, res)
     return coroutine.wrap(function()
         self.not_found_controller(req, res)
     end)()
+end
+
+function root:reassign_headers(req)
+    local headers = {}
+    for _, header in ipairs(req.headers) do
+        headers[header[1]] = header[2]
+    end
+    req.headers = headers
 end
 
 function root:start(ip, port)

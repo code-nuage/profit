@@ -6,6 +6,8 @@ local root = require("./Utils/root")
 local config = require("./config")
 local user_routes = require("./Routes/user")
 
+_G.moreutils = require("./Utils/more-utils")
+
 local router = root.new_router()
 :set_not_found(require("./Controllers/notfound"))
 
