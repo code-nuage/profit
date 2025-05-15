@@ -12,7 +12,7 @@ return function(router)
     end):add_route("/user/:value", "GET", function(req, res)
         local code, body, mime
 
-        if req.params.value:match("^%d+$") then
+        if req.params.value:match("^%d+$") then                                -- Check if the params is an ID
             code, body, mime = controller_user.read_by_id(tonumber(req.params.value))
         else
             code, body, mime = controller_user.read_by_email(req.params.value)
@@ -23,8 +23,16 @@ return function(router)
         res:setHeader("Content-Length", #body)
 
         res:finish(body)
-    end):add_route("/users/", "GET", function(req, res)
+    end):add_route("/users", "GET", function(req, res)
         local code, body, mime = controller_user.read_all()
+
+        res:writeHead(code)
+        res:setHeader("Content-Type", mime)
+        res:setHeader("Content-Length", #body)
+
+        res:finish(body)
+    end):add_route("/user/:email", "DELETE", function(req, res)
+        local code, body, mime = controller_user.delete_by_email(req.params.email)
 
         res:writeHead(code)
         res:setHeader("Content-Type", mime)

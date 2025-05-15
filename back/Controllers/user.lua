@@ -29,27 +29,27 @@ local function is_create_format_valid(data)
         return false, "Invalid data format", status["Bad Request"]
     end
 
-    if type(data.name) ~= "string" or
+    if not data.name or type(data.name) ~= "string" or
     #data.name < 4 or
     #data.name > 16 then
         return false, "Invalid name: must be between 4 and 16 characters", status["Unprocessable Entity"]
     end
 
-    if type(data.password) ~= "string" or
+    if not data.password or type(data.password) ~= "string" or
     #data.password < 8 or
     #data.password > 24 then
         return false, "Invalid password: must be between 8 and 24 characters", status["Unprocessable Entity"]
     end
 
-    if not is_valid_date(data.birthdate) then
+    if not data.birthdate or not is_valid_date(data.birthdate) then
         return false, "Invalid birthdate: must be in YYYY-MM-DD format", status["Unprocessable Entity"]
     end
 
-    if not is_valid_email(data.email) then
+    if not data.email or not is_valid_email(data.email) then
         return false, "Invalid email format"
     end
 
-    if data.role ~= "USER" and data.role ~= "ADMIN" then
+    if not data or data.role ~= "USER" and data.role ~= "ADMIN" then
         return false, "Invalid role: must be USER or ADMIN", status["Unprocessable Entity"]
     end
 
@@ -112,7 +112,7 @@ function controller.create(json_data)
             end
         end
         return status["Conflict"],
-            "User with email " .. data.email .. " already exists.",
+            "User with email " .. data.email .. " already exists",
             mime["text"]
     end
 
@@ -160,6 +160,20 @@ function controller.read_all()
 
     return status["Not Found"],
     "No users found",
+    mime["text"]
+end
+
+function controller.delete_by_email(email)
+    local data = user_model.delete_by_email(email)
+
+    if data then
+        return status["Reset Content"],
+        "User with email " .. email .. " deleted",
+        mime["text"]
+    end
+
+    return status["Not Found"],
+    "User with email " .. email .. " doesn't exists",
     mime["text"]
 end
 

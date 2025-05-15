@@ -4,6 +4,7 @@
 
 local http = require("http")
 local url = require("url")
+local querystring = require("querystring")
 
 local root = {}
 root.__index = root
@@ -43,7 +44,7 @@ end
 
 function root:handle_request(req, res)
     local parsed = url.parse(req.url)
-    local path = parsed.pathname
+    local path = querystring.urldecode(parsed.pathname)                        -- Query string to handle special chars in URL
 
     self:reassign_headers(req)
 
