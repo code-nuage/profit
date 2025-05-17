@@ -61,7 +61,8 @@ $colors: (
     'negative': #BF1A2F,
     'accent': #F85FD0,
     'light': #FFFFFF,
-    'dark': #2A1E28
+    'dark': #2A1E28,
+    'none': none
 );
 
 // --+ RESET +--
@@ -138,7 +139,7 @@ a:hover {
 
 @each $name, $color in $colors {                                               // BACKGROUND COLOR
     .pds-background-#{$name} {
-        background-color: $color;
+        background: $color;
     }
 }
 

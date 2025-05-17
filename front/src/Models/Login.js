@@ -2,7 +2,7 @@ import Config from "../config.js";
 
 // import NotificationController from "../Controllers/Notification";
 
-export default async function(controller) {
+export default async function() {
     const email = document.querySelector('#email').value;
     const password = document.querySelector('#password').value;
 
