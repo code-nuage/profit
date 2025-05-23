@@ -1,48 +1,39 @@
-import NotificationView from '../Views/Notification';
-
-const colors = {
-    "primary": "pds-bg-color-primary",
-    "secondary": "pds-bg-color-secondary",
-    "tertiary": "pds-bg-color-tertiary",
-    "positive": "pds-bg-color-positive",
-    "negative": "pds-bg-color-negative",
-    "accent": "pds-bg-color-accent",
-    "light": "pds-bg-color-light",
-    "dark": "pds-bg-color-dark",
-}
+import ViewNotification from '../Views/Notification';
 
 export default class NotificationController {
-    constructor(title, message, color) {
-        this.app = document.querySelector('#app');
+    constructor(title, message, backgroundColor, textColor) {
+        this.container = document.querySelector('#notifications');
         this.title = title;
         this.message = message;
-        this.color = colors[color];
+        this.backgroundColor = backgroundColor;
+        this.textColor = textColor;
         this.run();
     }
 
     run() {
         this.render();
 
-        this.container = document.querySelector('#notification');
+        this.notification = document.querySelector('#notification');
 
-        this.close = this.container.querySelector("#close");
+        this.close = this.notification.querySelector("#close");
+
+        this.container.classList.add('displayed');
 
         this.close.addEventListener("click", (e) => {
-            this.container.remove()
+            this.notification.remove();
+            this.notification = null;
+            this.container.classList.remove("displayed");
         })
 
         setTimeout(() => {
-            if (this.container) {
-                this.container.remove();
+            if (this.notification) {
+                this.notification.remove();
+                this.container.classList.remove('displayed');
             }
         }, 5000);
     }
 
     render() {
-        this.app.innerHTML += `
-        ${NotificationView}
-        `.replace("{{Title}}", this.title)
-        .replace("{{Message}}", this.message)
-        .replace("{{BackgroundColor}}", this.color);
+        new ViewNotification('#notifications', this.title, this.message, this.backgroundColor, this.textColor);
     }
 }

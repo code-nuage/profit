@@ -3,7 +3,7 @@ local json = require("json")
 local status = require("../Utils/status")
 local mime = require("../Utils/mime")
 
-local user_model = require("../Models/user")
+local model_user = require("../Models/user")
 
 --+ FORMAT CHECKING HELPERS+--
 local function is_valid_date(date)
@@ -98,10 +98,10 @@ function controller.create(json_data)
     local data = json.decode(json_data)
 
     if data then
-        if not user_model.get_by_email(data.email) then
+        if not model_user.get_by_email(data.email) then
             local format_validity, error_message, error_code = is_create_format_valid(data)
             if format_validity then
-                local returned_data = user_model.create(data)
+                local returned_data = model_user.create(data)
                 return status["Created"],
                 json.encode(returned_data),
                 mime["json"]
@@ -122,7 +122,7 @@ function controller.create(json_data)
 end
 
 function controller.read_by_id(id)
-    local data = user_model.get_by_id(id)
+    local data = model_user.get_by_id(id)
 
     if data then
         return status["OK"],
@@ -136,7 +136,7 @@ function controller.read_by_id(id)
 end
 
 function controller.read_by_email(email)
-    local data = user_model.get_by_email(email)
+    local data = model_user.get_by_email(email)
 
     if data then
         return status["OK"],
@@ -150,7 +150,7 @@ function controller.read_by_email(email)
 end
 
 function controller.read_all()
-    local data = user_model.get_all()
+    local data = model_user.get_all()
 
     if data then
         return status["OK"],
@@ -164,7 +164,7 @@ function controller.read_all()
 end
 
 function controller.delete_by_email(email)
-    local data = user_model.delete_by_email(email)
+    local data = model_user.delete_by_email(email)
 
     if data then
         return status["Reset Content"],

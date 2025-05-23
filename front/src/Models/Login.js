@@ -1,6 +1,6 @@
 import Config from "../config.js";
 
-// import NotificationController from "../Controllers/Notification";
+import ControllerNotification from "../Controllers/Notification";
 
 export default async function() {
     const email = document.querySelector('#email').value;
@@ -18,19 +18,19 @@ export default async function() {
             body: JSON.stringify(data)
         });
 
-        const result = await response.json();
+        const result = await response.text();
 
         if (response.ok) {
-            // new NotificationController("Connection", result.message, "accent");
-            console.log(result);
+            new ControllerNotification("Connection", result, "accent", "light");
 
-            window.location.redirect(window.location.origin + "/account");      // Redirection to account page
+            setTimeout(() => {
+                window.location.replace(window.location.origin + "/account");  // Redirection to account page
+            }, 1000);
         } else {
-            // new NotificationController("Error", result.error, "negative");
+            new ControllerNotification("Error", result, "negative", "light");
             console.log(result);
         }
     } catch(error) {
-        // new NotificationController("Server Error", "Can't connect to the backend server", "negative");
-        console.log(error);
+        new ControllerNotification("Server Error", "Can't connect to the backend server", "negative", "light");
     }
 }

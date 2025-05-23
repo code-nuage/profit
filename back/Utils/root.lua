@@ -50,7 +50,9 @@ function root:handle_request(req, res)
 
     self:display_request(req)
 
-    self:preflight(req, res)
+    if self:preflight(req, res) then
+        return
+    end
 
     for _, route in ipairs(self.routes) do
         local matches = {path:match(route.pattern)}
@@ -67,6 +69,7 @@ function root:handle_request(req, res)
                 else
                     print("A response should really send a status code")
                 end
+                self:set_cors_headers(req, res)
                 if res.header then
                     self:reassign_res_headers(res)
                 end
@@ -83,12 +86,13 @@ function root:handle_request(req, res)
 end
 
 function root:preflight(req, res)
+    res.header = {}
     if req.method == "OPTIONS" then
         res:writeHead(204)
         self:set_cors_headers(req, res)
-        print(moreutils.table.dump(res))
+        self:reassign_res_headers(res)
         res:finish()
-        return
+        return true
     end
 end
 
@@ -147,10 +151,10 @@ function root:set_cors_headers(req, res)
     local origin = req.headers["origin"]
 
     if origin then
-        res:setHeader("Access-Control-Allow-Origin", origin)
-        res:setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization")
-        res:setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-        res:setHeader("Access-Control-Allow-Credentials", true)
+        res.header["Access-Control-Allow-Origin"] = origin
+        res.header["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+        res.header["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+        res.header["Access-Control-Allow-Credentials"] = true
     end
 end
 

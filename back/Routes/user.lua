@@ -18,7 +18,4 @@ return function(router)
     :add_route("/user/:email", "DELETE", function(req, res)
         res.status, res.body, res.header["Content-Type"] = controller_user.delete_by_email(req.params.email)
     end)
-    :add_route("/user/:email", "DELETE", function(req, res)
-        res.status, res.body, res.header["Content-Type"] = controller_user.delete_by_email(req.params.email)
-    end)
 end

@@ -7,7 +7,8 @@ export default class ControllerLogin {
     constructor() {
         this.body = document.body;
         this.body.innerHTML = `<header id="navbar"></header>
-<section id="login"></section>`;
+<section id="login"></section>
+<div id="notifications"></div>`;
         this.section = document.querySelector('#login');
         this.run();
     }
