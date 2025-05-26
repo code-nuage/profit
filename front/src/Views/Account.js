@@ -20,6 +20,6 @@ export default class ViewAccount {
     }
 
     render() {
-        this.query.innerHTML = `${ComponentAccount}`.replace("{{Username}}", this.user.name);
+        this.query.innerHTML = `${ComponentAccount}`.replace('{{Username}}', this.user.name);
     }
 }

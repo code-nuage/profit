@@ -1,6 +1,4 @@
-import Config from "../config.js";
-
-// import NotificationController from "../Controllers/Notification";
+import Config from '../config.js';
 
 export default async function() {
     try {
@@ -15,14 +13,13 @@ export default async function() {
         const result = await response.json();
 
         if (response.ok) {
-            // new NotificationController("Connection", result.message, "accent");
             return result;
         } else {
-            // new NotificationController("Error", result.error, "negative");
             console.log(result);
+            return false;
         }
     } catch(error) {
-        // new NotificationController("Server Error", "Can't connect to the backend server", "negative");
         console.log(error);
+        return false;
     }
 }

@@ -15,14 +15,14 @@ export default class NotificationController {
 
         this.notification = document.querySelector('#notification');
 
-        this.close = this.notification.querySelector("#close");
+        this.close = this.notification.querySelector('#close');
 
         this.container.classList.add('displayed');
 
-        this.close.addEventListener("click", (e) => {
+        this.close.addEventListener('click', (e) => {
             this.notification.remove();
             this.notification = null;
-            this.container.classList.remove("displayed");
+            this.container.classList.remove('displayed');
         })
 
         setTimeout(() => {

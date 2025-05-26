@@ -3,16 +3,21 @@ import Router from './router.js';
 import ControllerErrorNotFound from './Controllers/ErrorNotFound.js';
 
 import ControllerHome from './Controllers/Home.js';
+import ControllerRegister from './Controllers/Register.js';
 import ControllerLogin from './Controllers/Login.js';
 import ControllerAccount from './Controllers/Account.js';
+import ControllerSettings from './Controllers/Settings.js';
 
-import './Profit-Design-System.scss'
+import Favicon from './favicon.ico';
+
+import './Profit-Design-System.scss';
 
 const router = new Router();
-router.setDefault(ControllerErrorNotFound)
-
-router.add('/', ControllerHome)                                                // I just love chained method don't mind
+router.setIcon(Favicon).setDefault(ControllerErrorNotFound)                                     // I just love chained method don't mind
+.add('/', ControllerHome)
+.add('/register', ControllerRegister)
 .add('/login', ControllerLogin)
-.add('/account', ControllerAccount);
-
-router.resolve();
+.add('/account', ControllerAccount)
+.add('/account-settings', ControllerSettings)
+// .add('/account-commands', ControllerCommands);
+.resolve();

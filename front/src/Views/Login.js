@@ -10,7 +10,7 @@ export default class ViewLogin {
         this.render();
 
         document.querySelector('.redirect-register').addEventListener('click', (e) => {
-            window.location.replace(window.location.origin + "/register");
+            window.location.replace(window.location.origin + '/register');
         });
     }
 

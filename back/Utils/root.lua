@@ -48,7 +48,7 @@ function root:handle_request(req, res)
 
     self:reassign_req_headers(req)
 
-    self:display_request(req)
+    self:display_request(req, res)
 
     if self:preflight(req, res) then
         return
@@ -107,7 +107,7 @@ function root:route_not_found(req, res)
     end
 end
 
-function root:display_request(req)
+function root:display_request(req, res)
     print("Request: URI: " .. req.url .. " Method: " .. req.method)
     print("Agent@host: " .. (req.headers["user-agent"] or "-") .. "@" .. (req.headers["host"] or "-"))
 end
