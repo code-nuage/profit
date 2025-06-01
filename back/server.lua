@@ -10,15 +10,17 @@ local json = require("json")  -- Luvit a un module JSON intégré
 local root = require("./Utils/root")
 
 local config = require("./config")
-local user_routes = require("./Routes/user")
-local connection_routes = require("./Routes/connection")
+local routes_user = require("./Routes/user")
+local routes_connection = require("./Routes/connection")
+local routes_cart = require("./Routes/cart")
 
 _G.moreutils = require("./Utils/more-utils")
 
 local router = root.new_router()
 :set_not_found(require("./Controllers/notfound"))
 
-user_routes(router)
-connection_routes(router)
+routes_user(router)
+routes_connection(router)
+routes_cart(router)
 
 router:start(config.server.ip, config.server.port)

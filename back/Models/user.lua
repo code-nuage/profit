@@ -25,6 +25,15 @@ function model.get_all()
     return goodbwhy.dir.select("Users"):get()
 end
 
+function model.update_by_email(email, data)
+    if data.password then
+        data.password = sha256(data.password)
+    end
+    data.updated_at = require("../Utils/time")()
+
+    return goodbwhy.dir.select("Users"):where("email", email):update(data)
+end
+
 function model.delete_by_email(email)
     return goodbwhy.dir.select("Users"):where("email", email):delete()
 end

@@ -105,6 +105,44 @@ function controller.logout()
                     ["Max-Age"] = 1})
 end
 
+function controller.rename(cookie, json_data)
+    local data = json.decode(json_data)
+    if cookie then
+        cookie = cookie:gsub("jwt=", "")
+
+        local jwt_token = jwt.verify(cookie, {secret = secret_key})
+
+        local sent_data = json.encode({name = data.name})
+
+        return controller_user.update_by_email(jwt_token.email, sent_data)
+    end
+end
+
+function controller.delete(cookie)
+    if cookie then
+        cookie = cookie:gsub("jwt=", "")
+
+        local jwt_token = jwt.verify(cookie, {secret = secret_key})
+
+        return controller_user.delete_by_email(jwt_token.email)
+    end
+end
+
+function controller.resetpassword(cookie, json_data)
+    local data = json.decode(json_data)
+    if cookie then
+        cookie = cookie:gsub("jwt=", "")
+
+        local jwt_token = jwt.verify(cookie, {secret = secret_key})
+
+        if data.password == data.passwordConfirm then
+            local sent_data = json.encode({password = data.password})
+
+            return controller_user.update_by_email(jwt_token.email, sent_data)
+        end
+    end
+end
+
 function controller.me(cookie)
     if cookie then
         cookie = cookie:gsub("jwt=", "")

@@ -66,6 +66,14 @@ $colors: (
     'none': none
 );
 
+$grid-gaps: (
+    0,
+    4,
+    8,
+    16,
+    24,
+    32);
+
 // --+ RESET +--
 * {
     font-family: 'Outfit', sans-serif;
@@ -173,3 +181,43 @@ a:hover {
 .pds-button:hover {
     cursor: pointer;
 }
+
+// --+ GRID SYSTEM +--
+.pds-grid {
+    display: grid;
+    gap: 16px;
+    padding: 0;
+}
+
+@for $i from 1 through 12 {
+    .pds-grid-cols-#{$i} {
+        grid-template-columns: repeat(#{$i}, 1fr);
+    }
+}
+
+@each $gap in $grid-gaps {
+    .pds-grid-gap-#{$gap} {
+        gap: #{$gap}px;
+    }
+}
+
+@media (max-width: 760px) {
+    .pds-grid-stack {
+        > [class*="pds-cols-"] {
+            grid-column: span 1 / span 1 !important;
+        }
+        grid-template-columns: 1fr !important;
+    }
+}
+
+@for $i from 1 through 12 {
+    .pds-cols-#{$i} {
+        grid-column: span #{$i} / span #{$i};
+    }
+}
+
+.pds-grid-center        { place-items: center; }
+.pds-grid-align-start   { align-items: start; }
+.pds-grid-align-end     { align-items: end; }
+.pds-grid-justify-start { justify-items: start; }
+.pds-grid-justify-end   { justify-items: end; }

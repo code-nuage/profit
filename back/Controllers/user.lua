@@ -58,34 +58,34 @@ end
 
 local function is_update_format_valid(data)
     if type(data) ~= "table" then
-        return false, "Invalid data format"
+        return false, "Invalid data format", status["Bad Request"]
     end
 
     if data.name and
     (type(data.name) ~= "string" or
     #data.name < 4 or
     #data.name > 16) then
-        return false, "Invalid name: must be between 4 and 16 characters"
+        return false, "Invalid name: must be between 4 and 16 characters", status["Unprocessable Entity"]
     end
 
     if data.password and
     (type(data.password) ~= "string" or
     #data.password < 8 or
     #data.password > 24) then
-        return false, "Invalid password: must be between 8 and 24 characters"
+        return false, "Invalid password: must be between 8 and 24 characters", status["Unprocessable Entity"]
     end
 
     if data.birthdate and not is_valid_date(data.birthdate) then
-        return false, "Invalid birthdate: must be in YYYY-MM-DD format"
+        return false, "Invalid birthdate: must be in YYYY-MM-DD format", status["Unprocessable Entity"]
     end
 
     if data.email and not is_valid_email(data.email) then
-        return false, "Invalid email format"
+        return false, "Invalid email format", status["Unprocessable Entity"]
     end
 
     if data.role and
     (data.role ~= "USER" and data.role ~= "ADMIN") then
-        return false, "Invalid role: must be USER or ADMIN"
+        return false, "Invalid role: must be USER or ADMIN", status["Unprocessable Entity"]
     end
 
     return true
@@ -105,11 +105,10 @@ function controller.create(json_data)
                 return status["Created"],
                 json.encode(returned_data),
                 mime["json"]
-            else
-                return error_code,
-                error_message,
-                mime["text"]
             end
+            return error_code,
+            error_message,
+            mime["text"]
         end
         return status["Conflict"],
             "User with email " .. data.email .. " already exists",
@@ -160,6 +159,32 @@ function controller.read_all()
 
     return status["Not Found"],
     "No users found",
+    mime["text"]
+end
+
+function controller.update_by_email(email, json_data)
+    local data = json.decode(json_data)
+
+    if data then
+        local format_validity, error_message, error_code = is_update_format_valid(data)
+        if format_validity then
+            local returned_data = model_user.update_by_email(email, data)
+            if returned_data then
+                return status["OK"],
+                json.encode(returned_data),
+                mime["json"]
+            end
+            return status["Not Found"],
+            "User with email " .. email .. " doesn't exists",
+            mime["text"]
+        end
+        return error_code,
+        error_message,
+        mime["text"]
+    end
+
+    return status["Internal Server Error"],
+    "Internal Server Error",
     mime["text"]
 end
 

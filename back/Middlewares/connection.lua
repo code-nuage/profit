@@ -12,7 +12,7 @@ return function(req)
             local payload = jwt.verify(jwt_token, {secret = secret_key})
 
             if payload then
-                return true
+                return true, payload
             end
         end
     end

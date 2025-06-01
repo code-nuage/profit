@@ -4,4 +4,13 @@ return function(router)
     router:add_route("/cart", "POST", function(req, res)                       -- I just love chained method don't mind
         res.status, res.body, res.header["Content-Type"] = controller_cart.create(req.body)
     end)
+    :add_route("/cart/status", "POST", function(req, res)
+        res.status, res.body, res.header["Content-Type"] = controller_cart.status.create(req.body)
+    end)
+    :add_route("/cart/status/:id", "GET", function(req, res)
+        res.status, res.body, res.header["Content-Type"] = controller_cart.status.read_by_id(req.params.id)
+    end)
+    :add_route("/cart/status/:id", "DELETE", function(req, res)
+        res.status, res.body, res.header["Content-Type"] = controller_cart.status.delete_by_id(req.params.id)
+    end)
 end

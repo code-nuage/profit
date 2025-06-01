@@ -102,4 +102,64 @@ function controller.remove_product(json_data)                                  -
     
 end
 
+controller.status = {}
+
+local function is_status_format_valid(data)
+    if type(data) ~= "table" then
+        return false, "Invalid data format", status["Bad Request"]
+    end
+
+    if not data.name then
+        return false, "Invalid status format"
+    end
+
+    return true
+end
+
+function controller.status.create(json_data)
+    local data = json.decode(json_data)
+
+    local format_validity, error_message = is_status_format_valid(data)
+
+    if format_validity then
+        local returned_data = model_cart.status.create(data)
+        return status["Created"],
+        json.encode(returned_data),
+        mime["json"]
+    end
+
+    return status["Bad Request"],
+    error_message,
+    mime["text"]
+end
+
+function controller.status.read_by_id(id)
+    local data = model_cart.status.get_by_id(id)
+
+    if data then
+        return status["OK"],
+        json.encode(data),
+        mime["json"]
+    end
+
+    return status["Not Found"],
+    "Cart status with id " .. id .. " not found",
+    mime["text"]
+end
+
+function controller.status.delete_by_id(id)
+    local data = model_cart.status.delete_by_id(id)
+
+    
+    if data then
+        return status["Reset Content"],
+        "Cart status with id " .. id .. " deleted",
+        mime["text"]
+    end
+
+    return status["Not Found"],
+    "Cart status with id " .. id .. " doesn't exists",
+    mime["text"]
+end
+
 return controller

@@ -5,7 +5,7 @@ import ModelMe from '../Models/Me.js';
 export default class ViewSettings {
     constructor(query) {
         this.query = document.querySelector(query);
-        this.run();
+        this.ready = this.run();
     }
 
     async run() {
@@ -14,7 +14,7 @@ export default class ViewSettings {
         this.render();
     }
 
-    render() {
-        this.query.innerHTML = `${ComponentSettings}`;
+    async render() {
+        this.query.innerHTML = `${ComponentSettings}`.replace('{{Name}}', this.user.name);
     }
 }
