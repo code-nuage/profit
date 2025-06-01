@@ -1,7 +1,18 @@
 #external {
-    padding-top: 96px;
-    canvas {
-        display: block;
-        width: 100%;
+    min-height: 100vh;
+    .container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        .left {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            margin: 4px 0;
+        }
+        .right {
+            display: flex;
+            align-items: center;
+        }
     }
 }

@@ -16,11 +16,11 @@ Navigate into the back directory:
 cd back
 ```
 
-Install `json` and `coro-fs` with lit:
+Install `jwt` and `coro-fs` with lit:
 
 ```sh
-lit install luvit/json
-lit install coro-fs
+lit install creationix/coro-fs
+lit install creationix/jwt
 ```
 
 ### Configure Back-end Server

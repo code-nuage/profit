@@ -1,0 +1,19 @@
+#error-not-found {
+    min-height: 100vh;
+    .container {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        .left {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .right {
+            img {
+                width: 320px;
+            }
+        }
+    }
+}

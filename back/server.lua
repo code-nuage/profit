@@ -8,8 +8,9 @@ local http = require("http")
 local json = require("json")  -- Luvit a un module JSON intégré
 
 local root = require("./Utils/root")
+local safe_require = require("./Utils/safe_require")
 
-local config = require("./config")
+local config = safe_require("./config", "\n\27[31;1m--+     ERROR     +--\nHey! It looks like there is no config file in here!\nClone 'config.sample.lua' to 'config.lua' and you should be good to go.\n--+               +--\27[0m")
 local routes_user = require("./Routes/user")
 local routes_connection = require("./Routes/connection")
 local routes_cart = require("./Routes/cart")
