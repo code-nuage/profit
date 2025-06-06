@@ -169,6 +169,9 @@ end
 function goodbwhy.dir:get_ids()
     local ids = self.ids or self:get_all_ids()
 
+    if #self.ids == 1 then
+        return ids[1]
+    end
     return ids
 end
 

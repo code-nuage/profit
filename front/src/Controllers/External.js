@@ -8,70 +8,127 @@ export default class ControllerExternal {
     constructor() {
         document.body.innerHTML = `<header id="navbar"></header>
 <section id="external"></section>`;
+        this.angle = 0;
+
+        this.animate = this.animate.bind(this);
+
+        this.colors = {
+            "Aucune":"pink",
+            "Rouge":"red",
+            "Vert":"lime",
+            "Bleu":"blue",
+            "Jaune":"yellow",
+            "Rose":"pink",
+        }
+
         this.run();
     }
 
-    run() {
-    this.render();
-
-    const canvas = document.querySelector('.condom-3d');
-
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
-    camera.position.set(5, 0, 0);
-    camera.lookAt(0, 0, 0);
-    console.log(camera.position);
-
-    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-    renderer.setSize(canvas.clientWidth, canvas.clientHeight);
-
-    const light = new THREE.DirectionalLight(0xffffff, 1);
-    light.position.set(1, 1, 1).normalize();
-    scene.add(light);
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    scene.add(ambientLight);
-
-    const geometry = new THREE.BoxGeometry(2, 2, 2); // cube 2x2x2
-    const material = new THREE.MeshStandardMaterial({ color: 0xff0000 }); // rouge bien visible
-    const cube = new THREE.Mesh(geometry, material);
-    cube.position.set(0, 0, 0);
-    // scene.add(cube);
-
-    const loader = new GLTFLoader(); // pas THREE.GLTFLoader !
-    loader.load(
-        'Condom/base.glb',
-        function (gltf) {
-            const model = gltf.scene;
-            model.scale.set(100, 100, 100);
-            model.position.set(0, 0, 0);
-            scene.add(model);
-            console.log(model.position);
-            animate();
-        },
-        function (xhr) {
-            console.log(`Chargement : ${(xhr.loaded / xhr.total * 100).toFixed(1)}%`);
-        },
-        function (error) {
-            console.error('Erreur de chargement GLB, chef :', error);
-        }
-    );
-
-    let angle = 0;
-
-    function animate() {
-        requestAnimationFrame(animate);
-        angle += 0.0025; // vitesse de rotation
-
-        // Position de la caméra qui tourne autour de l'axe Y à une distance de 5
-        camera.position.x = 5 * Math.cos(angle);
-        camera.position.z = 5 * Math.sin(angle);
-
-        camera.lookAt(0, 0, 0); // toujours regarder vers le centre
-        renderer.render(scene, camera);
+    loadModel(model) {
+        const loader = new GLTFLoader();
+        this.model = model;
+        loader.load(
+            model,
+            (gltf) => {
+                const model = gltf.scene;
+                model.scale.set(2, 2, 2);
+                model.position.set(0, 0, 0);
+                model.rotation.set(0, Math.PI - Math.PI / 6, -Math.PI / 6);
+                this.scene.add(model);
+            },
+            (xhr) => {
+                console.log(`Loading: ${(xhr.loaded / xhr.total * 100).toFixed(1)}%`);
+            },
+            (error) => {
+                console.error('Loading error:', error);
+            }
+        );
     }
 
-    animate();
-}
+    unloadModel() {
+        this.scene.remove(this.model);
+    }
+
+    animate() {
+        requestAnimationFrame(this.animate);
+
+        const baseSpeed = 0.05;
+        const minSpeed = 0;
+        const slowdownAngle = Math.PI / 2 + Math.PI / 3;
+        const slowdownWidth = Math.PI / 4;
+
+        let dist = Math.abs(Math.sin((this.angle - slowdownAngle) / 2));
+        
+        let slowdownFactor = 1 - Math.exp(-Math.pow(dist / slowdownWidth, 2));
+
+        let speed = minSpeed + (1 - slowdownFactor) * (baseSpeed - minSpeed);
+
+        this.angle += speed;
+
+        this.camera.position.x = 10 * Math.cos(this.angle);
+        this.camera.position.z = 10 * Math.sin(this.angle);
+        this.camera.lookAt(0, 0, 0);
+
+        this.renderer.render(this.scene, this.camera);
+    }
+
+    run() {
+        this.render();
+
+        this.colorSelect = document.querySelector('#color');
+
+        this.colorSelect.addEventListener('change', (e) => {
+            const color = e.target.value;
+
+            this.unloadModel();
+
+            const modelPath = `Condom/packaging/${this.colors[color]}.glb`;
+
+            this.loadModel(modelPath);
+        });
+
+        const canvas = document.querySelector('.condom-3d');
+
+        this.scene = new THREE.Scene();
+        const aspect = canvas.clientWidth / canvas.clientHeight;
+        const frustumSize = 5;
+
+        // OrthographicCamera avec dimensions bien calculées
+        this.camera = new THREE.OrthographicCamera(
+            -frustumSize * aspect / 2,
+            frustumSize * aspect / 2,
+            frustumSize / 2,
+            -frustumSize / 2,
+            0,
+            100
+        );
+        this.camera.position.set(0, 0, 0);
+        this.camera.lookAt(0, 0, 0);
+
+        this.renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+        this.renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+
+        const light = new THREE.DirectionalLight(0xffffff, 1);
+        light.position.set(1, 1, -1).normalize();
+        this.scene.add(light);
+
+        const light2 = new THREE.DirectionalLight(0xffffff, 1);
+        light2.position.set(-1, -1, 2).normalize();
+        this.scene.add(light2);
+
+        // const box = new THREE.BoxGeometry(.2, .2, .2);                     // Debugging lightning box
+        // const material = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); 
+        // const cube = new THREE.Mesh(box, material);
+        // cube.position.set(1, 1, -1).normalize();
+        // this.scene.add(cube);
+
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        this.scene.add(ambientLight);
+
+        this.loadModel('Condom/packaging/pink.glb');
+
+        this.animate();
+    }
 
     render() {
         new ViewNavbar('#navbar');

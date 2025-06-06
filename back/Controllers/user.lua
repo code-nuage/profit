@@ -5,7 +5,7 @@ local mime = require("../Utils/mime")
 
 local model_user = require("../Models/user")
 
---+ FORMAT CHECKING HELPERS+--
+--+ FORMAT CHECKING HELPERS +--
 local function is_valid_date(date)
     if type(date) ~= "string" then return false end
     local year, month, day = date:match("^(%d%d%d%d)%-(%d%d)%-(%d%d)$")

@@ -4,4 +4,7 @@ front/config.js
 back/deps
 back/config.lua
 
-database
+database/*
+!database/CartStatus
+!database/Customs
+!database/CustomsTypes

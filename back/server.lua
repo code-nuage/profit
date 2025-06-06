@@ -14,6 +14,7 @@ local config = safe_require("./config", "\n\27[31;1m--+     ERROR     +--\nHey! 
 local routes_user = require("./Routes/user")
 local routes_connection = require("./Routes/connection")
 local routes_cart = require("./Routes/cart")
+local routes_customs = require("./Routes/customs")
 
 _G.moreutils = require("./Utils/more-utils")
 
@@ -23,5 +24,6 @@ local router = root.new_router()
 routes_user(router)
 routes_connection(router)
 routes_cart(router)
+routes_customs(router)
 
 router:start(config.server.ip, config.server.port)
