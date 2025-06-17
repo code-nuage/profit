@@ -16,7 +16,7 @@ function model.get_by_email(user_email)
 end
 
 function model.add_product(user_email, products)
-    return goodbwhy.dr.select("Cart"):where("user_email", user_email):update({products = products})
+    return goodbwhy.dir.select("Cart"):where("user_email", user_email):update({products = products})
 end
 
 model.status = {}

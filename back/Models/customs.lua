@@ -17,6 +17,10 @@ function model.get_all()
     return goodbwhy.dir.select("Customs"):get()
 end
 
+function model.get_id_by_name(name)
+    return goodbwhy.dir.select("Customs"):where("name", name):get_ids()
+end
+
 model.types = {}
 
 function model.types.create(data)

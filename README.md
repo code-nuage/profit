@@ -60,7 +60,7 @@ cd front
 Install dependencies with npm:
 
 ```sh
-npm install webpack webpack-cli webpack-dev-server @babel/core @babel/preset-env babel-loader html-loader style-loader css-loader sass sass-loader --save-dev
+npm install webpack webpack-cli webpack-dev-server @babel/core @babel/preset-env babel-loader html-loader style-loader css-loader sass sass-loader three --save-dev
 ```
 
 ### Initialize Front-end Server
@@ -77,8 +77,8 @@ Our project is released under a permissive license, allowing for free use and mo
 
 License Terms:
 
-• You are granted permission to freely use, modify, and distribute this project.
-• All intellectual property rights to the project remain with the original authors.
-• By using this project, you agree to abide by the terms of the license agreement.
+- You are granted permission to freely use, modify, and distribute this project.
+- All intellectual property rights to the project remain with the original authors.
+- By using this project, you agree to abide by the terms of the license agreement.
 
 Note that our project is open-source, and we encourage contributions and feedback from the community.

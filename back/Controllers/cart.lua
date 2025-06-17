@@ -5,6 +5,9 @@ local mime = require("../Utils/mime")
 
 local model_cart = require("../Models/cart")
 
+local model_products = require("../Models/products")
+
+--+ FORMAT CHECKING HELPERS +--
 local function is_valid_email(email)
     if type(email) ~= "string" then return false end
     return email:match("^[%w%.%-_]+@[%w%-_]+%.%w%w+$") ~= nil
@@ -23,19 +26,18 @@ local function is_create_format_valid(data)
 end
 
 local function is_valid_product(data)
-    if type(data) ~= "string" then
+    if type(data) ~= "table" then
         return false, "Invalid data format", status["Unprocessable Entity"]
-    end
-
-    if not data.type and not type(data.type) == "table" then
-        return false, "Invalid type", status["Unprocessable Entity"]
     end
 
     if not data.customs and not type(data.customs) == "table" then
         return false, "Invalid customs", status["Unprocessable Entity"]
     end
+
+    return true
 end
 
+--+ CONTROLLER +--
 local controller = {}
 
 function controller.create(json_data)
@@ -77,15 +79,21 @@ end
 function controller.insert_product(json_data)                                  -- {user_email = string, product = table}
     local data = json.decode(json_data)
 
-    local existing = model_cart.get_by_email(data.user_email)                  -- Gets the existing cart
+    local existing = model_cart.get_by_email(data.user_email) or
+    model_cart.create({user_email = data.user_email})                          -- Gets the existing cart or create one
+
+    local product = model_products.create()
 
     if data then
         local format_validity, error_message, error_code = is_valid_product(data.product)
+        print(moreutils.table.dump(data.product))
         if format_validity then
-            table.insert(existing.products, data.product)                      -- Inserts the product in existing cart products 
+            table.insert(existing.products, data.product)                      -- Inserts the product in existing cart products
             local returned_data = model_cart.add_product(data.user_email, existing.products)
+            print(moreutils.table.dump(existing))
+
             return status["OK"],
-            returned_data,
+            json.encode(returned_data),
             mime["json"]
         end
         return error_code,
@@ -93,8 +101,8 @@ function controller.insert_product(json_data)                                  -
         mime["text"]
     end
 
-    return status["Not Found"],
-    "Cart with user_email " .. data.user_email .. " doesn't exists",
+    return status["Internal Server Error"],
+    "Cart decode json data",
     mime["text"]
 end
 
@@ -150,7 +158,6 @@ end
 function controller.status.delete_by_id(id)
     local data = model_cart.status.delete_by_id(id)
 
-    
     if data then
         return status["Reset Content"],
         "Cart status with id " .. id .. " deleted",

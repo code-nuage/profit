@@ -7,7 +7,8 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 export default class ControllerExternal {
     constructor() {
         document.body.innerHTML = `<header id="navbar"></header>
-<section id="external"></section>`;
+<section id="external"></section>
+<div id="notifications"></div>`;
         this.angle = 0;
 
         this.animate = this.animate.bind(this);
@@ -72,28 +73,13 @@ export default class ControllerExternal {
         this.renderer.render(this.scene, this.camera);
     }
 
-    run() {
-        this.render();
-
-        this.colorSelect = document.querySelector('#color');
-
-        this.colorSelect.addEventListener('change', (e) => {
-            const color = e.target.value;
-
-            this.unloadModel();
-
-            const modelPath = `Condom/packaging/${this.colors[color]}.glb`;
-
-            this.loadModel(modelPath);
-        });
-
+    attachScene() {
         const canvas = document.querySelector('.condom-3d');
 
         this.scene = new THREE.Scene();
         const aspect = canvas.clientWidth / canvas.clientHeight;
         const frustumSize = 5;
 
-        // OrthographicCamera avec dimensions bien calculées
         this.camera = new THREE.OrthographicCamera(
             -frustumSize * aspect / 2,
             frustumSize * aspect / 2,
@@ -108,21 +94,15 @@ export default class ControllerExternal {
         this.renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
         this.renderer.setSize(canvas.clientWidth, canvas.clientHeight);
 
-        const light = new THREE.DirectionalLight(0xffffff, 1);
+        const light = new THREE.DirectionalLight(0xffffff, 2);
         light.position.set(1, 1, -1).normalize();
         this.scene.add(light);
 
-        const light2 = new THREE.DirectionalLight(0xffffff, 1);
+        const light2 = new THREE.DirectionalLight(0xffffff, 2);
         light2.position.set(-1, -1, 2).normalize();
         this.scene.add(light2);
 
-        // const box = new THREE.BoxGeometry(.2, .2, .2);                     // Debugging lightning box
-        // const material = new THREE.MeshBasicMaterial( {color: 0x00ff00} ); 
-        // const cube = new THREE.Mesh(box, material);
-        // cube.position.set(1, 1, -1).normalize();
-        // this.scene.add(cube);
-
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 1);
         this.scene.add(ambientLight);
 
         this.loadModel('Condom/packaging/pink.glb');
@@ -130,8 +110,31 @@ export default class ControllerExternal {
         this.animate();
     }
 
-    render() {
+    attachForm() {
+        
+    }
+
+    async run() {
+        await this.render();
+
+        this.colorSelect = document.querySelector('#color');
+
+        this.colorSelect.addEventListener('change', (e) => {
+            const color = e.target.value;
+
+            this.unloadModel();
+
+            const modelPath = `Condom/packaging/${this.colors[color]}.glb`;
+
+            this.loadModel(modelPath);
+        });
+
+        this.attachScene();
+    }
+
+    async render() {
         new ViewNavbar('#navbar');
-        new ViewExternal('#external');
+        const external = new ViewExternal('#external');
+        await external.ready;
     }
 }

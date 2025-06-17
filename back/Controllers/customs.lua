@@ -68,7 +68,19 @@ function controller.read_by_id(id)
 end
 
 function controller.read_all()
-    local data = model_customs.get_all()
+    local types = model_customs.types.get_all()
+    local customs =  model_customs.get_all()
+
+    local data = {}
+
+    for _, t in ipairs(types) do
+        table.insert(data, {["type"] = t.name, ["customs"] = {}})
+        for _, c in ipairs(customs) do
+            if c.type_id == model_customs.types.get_id_by_name(t.name) then    -- Check if the name of the customs type is the name of the current type
+                table.insert(data[#data]["customs"], c)
+            end
+        end
+    end
 
     if data then
         return status["OK"],
@@ -78,6 +90,20 @@ function controller.read_all()
 
     return status["Not Found"],
     "No custom type found",
+    mime["text"]
+end
+
+function controller.read_id_by_name(name)
+    local data = model_customs.get_id_by_name(name)
+
+    if data then
+        return status["OK"],
+        json.encode(data),
+        mime["json"]
+    end
+
+    return status["Not Found"],
+    "Cutom with name " .. name .. " doesn't exists",
     mime["text"]
 end
 
