@@ -9,6 +9,7 @@ import ControllerAccount from './Controllers/Account.js';
 import ControllerSettings from './Controllers/Settings.js';
 // import ControllerCommands from './Controllers/Commands.js';
 import ControllerExternal from './Controllers/External.js';
+import ControllerCart from './Controllers/Cart.js';
 
 import Favicon from './favicon.ico';
 
@@ -23,4 +24,5 @@ router.setIcon(Favicon).setDefault(ControllerErrorNotFound)                    /
 .add('/account-settings', ControllerSettings)
 // .add('/account-commands', ControllerCommands);
 .add('/external', ControllerExternal)
+.add('/cart', ControllerCart)
 .resolve();

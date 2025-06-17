@@ -57,7 +57,7 @@ $border-radius: (
 
 $colors: (
     'primary': #4D00FF,
-    'secondary': #CEC5FF,
+    'secondary': #7B63FF,
     'tertiary': #E6D4E3,
     'positive': #0EFB89,
     'negative': #BF1A2F,
@@ -187,7 +187,6 @@ a:hover {
 .pds-grid {
     display: grid;
     gap: 16px;
-    padding: 0;
 }
 
 @for $i from 1 through 12 {

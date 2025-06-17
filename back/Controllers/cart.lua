@@ -4,8 +4,7 @@ local status = require("../Utils/status")
 local mime = require("../Utils/mime")
 
 local model_cart = require("../Models/cart")
-
-local model_products = require("../Models/products")
+local model_customs = require("../Models/customs")
 
 --+ FORMAT CHECKING HELPERS +--
 local function is_valid_email(email)
@@ -82,15 +81,19 @@ function controller.insert_product(json_data)                                  -
     local existing = model_cart.get_by_email(data.user_email) or
     model_cart.create({user_email = data.user_email})                          -- Gets the existing cart or create one
 
-    local product = model_products.create()
-
     if data then
         local format_validity, error_message, error_code = is_valid_product(data.product)
-        print(moreutils.table.dump(data.product))
+
+
         if format_validity then
+            for custom_type, custom in pairs(data.product.customs) do
+                data.product.customs[custom_type] = model_customs.get_id_by_name(custom)
+            end
+
+            print(moreutils.table.dump(data))
+            
             table.insert(existing.products, data.product)                      -- Inserts the product in existing cart products
             local returned_data = model_cart.add_product(data.user_email, existing.products)
-            print(moreutils.table.dump(existing))
 
             return status["OK"],
             json.encode(returned_data),
@@ -102,7 +105,7 @@ function controller.insert_product(json_data)                                  -
     end
 
     return status["Internal Server Error"],
-    "Cart decode json data",
+    "Can't decode json data",
     mime["text"]
 end
 

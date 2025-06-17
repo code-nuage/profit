@@ -15,7 +15,6 @@ local routes_user = require("./Routes/user")
 local routes_connection = require("./Routes/connection")
 local routes_cart = require("./Routes/cart")
 local routes_customs = require("./Routes/customs")
-local routes_products = require("./Routes/products")
 
 _G.moreutils = require("./Utils/more-utils")
 
@@ -26,6 +25,5 @@ routes_user(router)
 routes_connection(router)
 routes_cart(router)
 routes_customs(router)
-routes_products(router)
 
 router:start(config.server.ip, config.server.port)
