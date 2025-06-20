@@ -24,9 +24,9 @@ export default class ViewExternal {
 
         this.data.forEach(e => {
             const options = e.customs
-                .map(c => `<option class="pds-text-light pds-text-size-16">${c.name}</option>`)
+                .map(c => `<option class="pds-text-light" value="${c.name}"><span class="value pds-text-size-16">${c.name}</span> <span class="price">+${c.price}€</span></option>`)
                 .join('');
-
+            
             this.form += `
             <div class="${e.type}">
                 <h2 class="pds-text-light pds-text-size-24 pds-text-weight-bold">${types[e.type]}</h2>
@@ -39,7 +39,6 @@ export default class ViewExternal {
         this.form += `<button class="redirect-add pds-button pds-text-light pds-text-size-16 pds-background-accent pds-border-radius-4" type="submit">Ajouter au panier</button>`;
 
         this.render();
-        
 
         document.querySelector('.redirect-add').addEventListener('click', (e) => {
             e.preventDefault();

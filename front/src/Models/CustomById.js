@@ -1,5 +1,7 @@
 import Config from '../config.js';
 
+import ControllerNotification from '../Controllers/Notification.js';
+
 export default async function(id) {
     try {
         const response = await fetch(`http://${Config.backend.ip}:${Config.backend.port}/custom/${id}`, {

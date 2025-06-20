@@ -16,8 +16,13 @@
                 width: 100%;
                 padding: 4px 8px;
                 appearance: base-select;
+                :not(:-internal-list-box):not([multiple])::picker-icon {
+                    content: none;
+                }
                 option {
                     padding: 0 4px;
+                    display: flex;
+                    justify-content: space-between;
                 }
                 option:hover {
                     background-color: #FFFFFF88;
@@ -31,7 +36,7 @@
             select::picker(select) {
                 appearance: base-select;
                 padding: 8px;
-                margin-top: 8px;
+                margin: 8px 0;
                 border: 1px solid white;
                 background-color: #F85FD0;
                 border-radius: 8px;

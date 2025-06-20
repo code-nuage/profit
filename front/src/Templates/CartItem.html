@@ -1,4 +1,4 @@
-<div class="cart-item pds-grid pds-grid-cols-2 pds-grid-stack pds-background-secondary pds-border-radius-8">
+<div class="cart-item pds-grid pds-grid-cols-2 pds-grid-stack pds-background-secondary pds-border-radius-8" data-id="{{ItemId}}">
     <div class="left pds-cols-1">
         <h3 class="pds-text-light pds-text-size-24 pds-text-weight-bold">{{Name}}</h3>
         <div class="customs">
@@ -7,5 +7,11 @@
     </div>
     <div class="right pds-cols-1">
         <a class="redirect-delete pds-button pds-icon pds-background-negative pds-border-radius-8"><img src="{{IconDelete}}" alt="Delete Item Icon"></a>
+        <div class="bottom pds-text-light">
+            <span>Base: {{BasePrice}}€</span>
+            <span>+ Suppléments: {{CustomsPrice}}€</span>
+            <hr>
+            <h3 class="pds-text-size-24 pds-text-weight-bold">{{TotalPrice}}€</h3>
+        </div>
     </div>
 </div>

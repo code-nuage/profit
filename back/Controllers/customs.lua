@@ -19,6 +19,10 @@ local function is_create_format_valid(data)
         return false, "Invalid ID: must be an integer", status["Unprocessable Entity"]
     end
 
+    if not data.price or type(data.price) ~= "number" then
+        return false, "Invalid price: must be an integer", status["Unprocessable Entity"]
+    end
+
     if not model_customs.types.get_by_id(data.type_id) then
         return false, "Invalid ID: Type with ID " .. data.type_id .. " doesn't exists", status["Unprocessable Entity"]
     end

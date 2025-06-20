@@ -81,19 +81,29 @@ function controller.insert_product(json_data)                                  -
     local existing = model_cart.get_by_email(data.user_email) or
     model_cart.create({user_email = data.user_email})                          -- Gets the existing cart or create one
 
+    local last_id = 0
+    local next_id
+
+    if existing and existing.products and #existing.products > 0 then
+        local last_product = existing.products[#existing.products]
+        last_id = last_product.id or 1
+    end
+
+    next_id = last_id + 1
+
+    data.product.id = next_id
+    data.product.base_price = 5
+
     if data then
         local format_validity, error_message, error_code = is_valid_product(data.product)
-
 
         if format_validity then
             for custom_type, custom in pairs(data.product.customs) do
                 data.product.customs[custom_type] = model_customs.get_id_by_name(custom)
             end
 
-            print(moreutils.table.dump(data))
-            
             table.insert(existing.products, data.product)                      -- Inserts the product in existing cart products
-            local returned_data = model_cart.add_product(data.user_email, existing.products)
+            local returned_data = model_cart.update_products(data.user_email, existing.products)
 
             return status["OK"],
             json.encode(returned_data),
@@ -109,8 +119,29 @@ function controller.insert_product(json_data)                                  -
     mime["text"]
 end
 
-function controller.remove_product(json_data)                                  -- {}
-    
+function controller.remove_product(json_data, id)
+    local data = json.decode(json_data)
+
+    if data then
+        local existing = model_cart.get_by_email(data.user_email) or
+        model_cart.create({user_email = data.user_email})                          -- Gets the existing cart or create one
+
+        for k, p in ipairs(existing.products) do
+            print(p.id .. " = " .. id .. ":" .. tostring(p.id == id))
+            if p.id == id then
+                table.remove(existing.products, k)
+                local returned_data = model_cart.update_products(data.user_email, existing.products)
+
+                return status["OK"],
+                json.encode(returned_data),
+                mime["json"]
+            end
+        end
+
+        return status["Not Found"],
+        "Cart product with ID " .. id .. " doesn't exists",
+        mime["text"]
+    end
 end
 
 controller.status = {}
